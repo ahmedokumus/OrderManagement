@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Domain.Entities.Common;
 using System.Reflection;
-using System.Data;
 
 
 namespace Persistence.Contexts

@@ -7,7 +7,6 @@ using Application.Repositories.CompanyRepository;
 using Application.Repositories.ProductCategoryRepository;
 using Application.Repositories.ProductRepository;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Common;
@@ -42,53 +41,5 @@ public class ProductController : BaseController<
         _companyUnitOfWork = companyUnitOfWork;
         _productCategoryUnitOfWork = productCategoryUnitOfWork;
        
-    }
-
-    [HttpPost("SeedData")]
-    public async Task<IActionResult> SeedData(int numberOfRecords)
-    {
-        Random random = new Random();
-
-        List<Guid> companyIdList = new List<Guid>();
-        foreach (var company in _companyUnitOfWork.ReadRepository.GetAll())
-        {
-            companyIdList.Add(company.Id);
-        }
-
-        List<Guid> productCategoryIdList = new List<Guid>();
-        foreach (var productCategory in _productCategoryUnitOfWork.ReadRepository.GetAll())
-        {
-            productCategoryIdList.Add(productCategory.Id);
-        }
-
-        for (int i = 1; i <= numberOfRecords; i = i + 1)
-        {
-            var request = new CreateProductRequest()
-            {
-                StockCount = i * 10,
-                Price = i * 100,
-                CompanyId = companyIdList[random.Next(0, companyIdList.Count)],
-                ProductCategoryId = productCategoryIdList[random.Next(0, productCategoryIdList.Count)],
-                Name = $"Product Name {i}",
-                Description = $"Product Description {i}"
-            };
-
-            Product product = new()
-            {
-                StockCount = request.StockCount,
-                Price = request.Price,
-                Name = request.Name,
-                Description = request.Description,
-                Company = _companyUnitOfWork.ReadRepository.GetByIdAsync(request.CompanyId).Result,
-                ProductCategory = _productCategoryUnitOfWork.ReadRepository.GetByIdAsync(request.ProductCategoryId)
-                    .Result,
-            };
-
-            await _unitOfWork.WriteRepository.AddAsync(product);
-        }
-
-        await _unitOfWork.SaveAsync();
-
-        return Ok($"{numberOfRecords} Product have been created.");
     }
 }

@@ -16,52 +16,52 @@ public abstract class BaseController<
     where TGetByIdRequest : IRequest<TGetByIdResponse>
 {
     protected readonly IMediator Mediator;
-    protected readonly ILogger<BaseController<TCreateRequest, TUpdateRequest, TDeleteRequest, TGetByIdRequest, TGetAllRequest, TDeleteResponse, TGetByIdResponse>> _logger;
+    protected readonly ILogger<BaseController<TCreateRequest, TUpdateRequest, TDeleteRequest, TGetByIdRequest, TGetAllRequest, TDeleteResponse, TGetByIdResponse>> Logger;
 
     protected BaseController(ILogger<BaseController<TCreateRequest, TUpdateRequest, TDeleteRequest, TGetByIdRequest, TGetAllRequest, TDeleteResponse, TGetByIdResponse>> logger, IMediator mediator)
     {
         Mediator = mediator;
-        _logger = logger;
+        Logger = logger;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] TCreateRequest createCommand)
+    public virtual async Task<IActionResult> Add([FromBody] TCreateRequest createCommand)
     {
-        _logger.LogInformation("Add method called with request: {Request}", createCommand);
+        Logger.LogInformation("Add method called with request: {Request}", createCommand);
         var response = await Mediator.Send(createCommand!);
         return Created(uri: "", response);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] TUpdateRequest updateCommand)
+    public virtual async Task<IActionResult> Update([FromBody] TUpdateRequest updateCommand)
     {
-        _logger.LogInformation("Update method called with request: {Request}", updateCommand);
+        Logger.LogInformation("Update method called with request: {Request}", updateCommand);
         var response = await Mediator.Send(updateCommand!);
         return Ok(response);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    public virtual async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        _logger.LogInformation("Delete method called with id: {Id}", id);
+        Logger.LogInformation("Delete method called with id: {Id}", id);
         var command = (TDeleteRequest)Activator.CreateInstance(typeof(TDeleteRequest), id)!;
         var response = await Mediator.Send(command);
         return Ok(response);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public virtual async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        _logger.LogInformation("GetById method called with id: {Id}", id);
+        Logger.LogInformation("GetById method called with id: {Id}", id);
         var request = (TGetByIdRequest)Activator.CreateInstance(typeof(TGetByIdRequest), id)!;
         var response = await Mediator.Send(request);
         return Ok(response);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public virtual async Task<IActionResult> GetAll()
     {
-        _logger.LogInformation("GetAll method called");
+        Logger.LogInformation("GetAll method called");
         var query = (TGetAllRequest)Activator.CreateInstance(typeof(TGetAllRequest))!;
         var response = await Mediator.Send(query);
         return Ok(response);
