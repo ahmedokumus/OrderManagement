@@ -1,12 +1,10 @@
-﻿using Application.Repositories;
-using Application.Repositories.CompanyRepository;
+﻿using Application.Repositories.CompanyRepository;
 using Application.Repositories.OrderRepository;
 using Application.Repositories.ProductCategoryRepository;
 using Application.Repositories.ProductRepository;
 using Application.Repositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Persistence.Concretes;
 using Persistence.Concretes.CompanyRepository;
 using Persistence.Concretes.OderRepository;
 using Persistence.Concretes.ProductCategoryRepository;

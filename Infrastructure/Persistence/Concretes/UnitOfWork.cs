@@ -1,14 +1,4 @@
 ﻿using Application.Repositories;
-using Application.Repositories.CompanyRepository;
-using Application.Repositories.OrderRepository;
-using Application.Repositories.ProductCategoryRepository;
-using Application.Repositories.ProductRepository;
-using Application.Repositories.UserRepository;
-using Persistence.Concretes.CompanyRepository;
-using Persistence.Concretes.OderRepository;
-using Persistence.Concretes.ProductCategoryRepository;
-using Persistence.Concretes.ProductRepository;
-using Persistence.Concretes.UserRepository;
 using Persistence.Contexts;
 
 namespace Persistence.Concretes;

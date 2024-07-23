@@ -3,7 +3,6 @@ using Application.Features.Orders.Queries.GetAll;
 using Application.Features.Orders.Queries.GetById;
 using Application.Repositories.CompanyRepository;
 using Application.Repositories.OrderRepository;
-using Application.Repositories.ProductRepository;
 using Application.Repositories.UserRepository;
 using Domain.Entities;
 using Domain.Enums;

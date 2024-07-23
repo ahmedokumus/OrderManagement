@@ -18,17 +18,17 @@ namespace Persistence.Concretes
         public DbSet<T> Table => _context.Set<T>();
 
 
-        public IQueryable<T> GetAll() => Table.AsQueryable();
+        public virtual IQueryable<T> GetAll() => Table.AsQueryable();
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public virtual async Task<T> GetByIdAsync(Guid id)
         {
             return (await Table.FirstOrDefaultAsync(data => data.Id == id))!;
         }
 
-        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> method)
+        public virtual async Task<T> GetSingleAsync(Expression<Func<T, bool>> method)
         => (await Table.FirstOrDefaultAsync(method))!;
 
-        public IQueryable<T> GetWhere(Expression<Func<T, bool>> method)
+        public virtual IQueryable<T> GetWhere(Expression<Func<T, bool>> method)
         => Table.Where(method);
 
     }

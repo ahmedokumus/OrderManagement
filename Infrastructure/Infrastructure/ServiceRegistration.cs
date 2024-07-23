@@ -1,8 +1,6 @@
 ﻿using Application.Services;
 using Infrastructure.Cache.Microsoft;
 using Infrastructure.Mailing;
-
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;

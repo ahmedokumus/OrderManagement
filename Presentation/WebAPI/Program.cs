@@ -1,7 +1,6 @@
 using Application;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using Core;
 using Infrastructure;
 using Persistence;
 using WebAPI.Middleware;
