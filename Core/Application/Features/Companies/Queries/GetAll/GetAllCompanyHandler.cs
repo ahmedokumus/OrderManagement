@@ -1,4 +1,5 @@
-﻿using Application.Repositories.CompanyRepository;
+﻿using Application.Features.Companies.Constants;
+using Application.Repositories.CompanyRepository;
 using Application.Services;
 using AutoMapper;
 using Domain.Entities;
@@ -22,19 +23,15 @@ public class GetAllCompanyHandler : IRequestHandler<GetAllCompanyRequest, List<G
 
 	public Task<List<GetAllCompanyResponse>> Handle(GetAllCompanyRequest request, CancellationToken cancellationToken)
     {
-		var cacheKey = "GetAllCompanies";
-		var cachedCompanies = _cacheService.GetAll<List<GetAllCompanyResponse>>(cacheKey);
+		var cachedCompanies = _cacheService.GetAll<List<GetAllCompanyResponse>>(CompaniesCacheKeys.GetAllCompanies);
 		if (cachedCompanies != null)
 		{
 			return Task.FromResult(cachedCompanies);
 		}
 
-
 		List<Company> company = _unitOfWork.ReadRepository.GetAll().ToList();
-
         List<GetAllCompanyResponse> response = _mapper.Map<List<GetAllCompanyResponse>>(company);
-
-		_cacheService.Set(cacheKey, response, TimeSpan.FromHours(1));
+		_cacheService.Set(CompaniesCacheKeys.GetAllCompanies, response, TimeSpan.FromMinutes(1));
 
 		return Task.FromResult(response);
     }

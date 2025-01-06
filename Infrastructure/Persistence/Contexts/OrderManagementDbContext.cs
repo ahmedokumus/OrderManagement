@@ -28,9 +28,9 @@ namespace Persistence.Contexts
 		}
 
 
-
-		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-		{
+        //SaveChangesAsync metodu çağırıldığında ekleme veya güncelleme işlemi yapıldıysa database de ilgili alanların doldurulması için metodu override ediyoruz
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
 			var datas = ChangeTracker.Entries<BaseEntity<Guid>>();
 			foreach (var data in datas)
 			{

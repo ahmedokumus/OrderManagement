@@ -1,100 +1,105 @@
-# Company Order Management System
+# Şirket Sipariş Yönetim Sistemi
 
-## Project Description
+## Proje Açıklaması
 
-The Company Order Management System is designed to facilitate the management of company orders through a robust backend API. This API will be the core of the application, allowing future expansions such as a Blazor-based admin panel. The project is built with scalability and extensibility in mind, starting with Phase 1.
+Şirket Sipariş Yönetim Sistemi, şirket siparişlerinin yönetimini sağlayan güçlü bir backend API olarak tasarlanmıştır. Bu API, ileride Blazor tabanlı bir yönetim paneli gibi genişlemelere olanak sağlayacak şekilde uygulamanın çekirdeğini oluşturmaktadır. Proje, ölçeklenebilirlik ve genişletilebilirlik göz önünde bulundurularak Faz 1 olarak geliştirilmiştir.
 
-### Key Features:
+### Temel Özellikler:
 
-- **API Focused**: The frontend communicates with the backend through the API.
-- **Onion Architecture**: Ensures a maintainable and scalable codebase.
-- **Repository Pattern & CQRS**: Efficient and clean data handling.
-- **Service Layer**: Encapsulates business logic.
-- **SOLID Principles**: Promotes high-quality and maintainable code.
-- **Dependency Injection**: For managing dependencies.
-- **CodeFirst with EntityFramework**: MSSQL database using CodeFirst approach.
-- **UnitOfWork Pattern**: Manages data operations.
-- **Standardized DTOs & ApiResponse**: For consistent data transfer and responses.
-- **Unit Testing**: Ensures code quality with 70% coverage.
-- **Exception Handling**: Robust system for managing errors.
-- **Caching**: Internal caching for Company and ProductCategory entities.
-- **Seed Data**: Initial data setup.
+- **API Odaklı**: Frontend, backend ile API üzerinden iletişim kurar.
+- **Soğan Mimarisi**: Sürdürülebilir ve ölçeklenebilir kod tabanı sağlar.
+- **Repository Pattern & CQRS**: Verimli ve temiz veri yönetimi.
+- **Servis Katmanı**: İş mantığını kapsüller.
+- **SOLID Prensipleri**: Yüksek kaliteli ve sürdürülebilir kod sağlar.
+- **Dependency Injection**: Bağımlılıkların yönetimi için.
+- **CodeFirst ve EntityFramework**: MSSQL veritabanı CodeFirst yaklaşımı ile.
+- **UnitOfWork Pattern**: Veri işlemlerini yönetir.
+- **Standart DTOlar & ApiResponse**: Tutarlı veri transferi ve yanıtlar için.
+- **Birim Testleri**: %70 kapsama oranı ile kod kalitesini sağlar.
+- **Hata Yönetimi**: Hataları yönetmek için sağlam sistem.
+- **Önbellekleme**: Şirket ve Ürün Kategorileri için dahili önbellekleme.
+- **Başlangıç Verisi**: İlk veri kurulumu.
 
-## Database Entities
+## Veritabanı Varlıkları
 
-### Company : BaseEntity
+### Şirket : TemelVarlık
 - Id
-- Name
-- Description
-- User
-- Products
-- Orders
-- CreatedDate
-- LastUpdatedDate
+- Ad
+- Açıklama
+- Kullanıcı
+- Ürünler
+- Siparişler
+- OluşturulmaTarihi
+- SonGüncellemeTarihi
 
-### Product : BaseEntity
+### Ürün : TemelVarlık
 - Id
-- Name
-- Description
-- StockCount
-- Price
-- Company
-- ProductCategory
-- CreatedDate
-- LastUpdatedDate
+- Ad
+- Açıklama
+- StokSayısı
+- Fiyat
+- Şirket
+- ÜrünKategorisi
+- OluşturulmaTarihi
+- SonGüncellemeTarihi
 
-### ProductCategory : BaseEntity
+### ÜrünKategorisi : TemelVarlık
 - Id
-- Name
-- Description
-- Products
-- CreatedDate
-- LastUpdatedDate
+- Ad
+- Açıklama
+- Ürünler
+- OluşturulmaTarihi
+- SonGüncellemeTarihi
 
-### Order : BaseEntity
+### Sipariş : TemelVarlık
 - Id
-- Name
-- OrderCount
-- UnitPrice
-- TotalPrice
-- OrderStatus (Pending, Successful, Failed)
-- Company
-- Product
-- User
-- CreatedDate
-- LastUpdatedDate
+- Ad
+- SiparişSayısı
+- BirimFiyat
+- ToplamFiyat
+- SiparişDurumu (Beklemede, Başarılı, Başarısız)
+- Şirket
+- Ürün
+- Kullanıcı
+- OluşturulmaTarihi
+- SonGüncellemeTarihi
 
-### User : BaseEntity
+### Kullanıcı : TemelVarlık
 - Id
-- Name
-- Description
-- Orders
-- CreatedDate
-- LastUpdatedDate
+- Ad
+- Açıklama
+- Siparişler
+- OluşturulmaTarihi
+- SonGüncellemeTarihi
 
-Standard operations related to these entities will be implemented (e.g., creating products, placing orders, user registration). Additional fields can be added as needed.
+Bu varlıklarla ilgili standart işlemler uygulanacaktır (örn. ürün oluşturma, sipariş verme, kullanıcı kaydı). Gerektiğinde ek alanlar eklenebilir.
 
-## Getting Started
+## Başlangıç
 
-Follow these steps to get started with the project:
+Projeyi başlatmak için aşağıdaki adımları izleyin:
 
-1. **Clone the Repository**:
+1. **Depoyu Klonlayın**:
    ```sh
    git clone https://github.com/ahmedokumus/OrderManagement.git
    cd OrderManagement
-   
-2. **Install Dependencies**:
+   ```
+
+2. **Bağımlılıkları Yükleyin**:
    ```sh
    dotnet restore
-  
-3. **Create the Database**:
+   ```
+
+3. **Veritabanını Oluşturun**:
    ```sh
    dotnet ef database update
-  
-4. **Run the Application**:
+   ```
+
+4. **Uygulamayı Çalıştırın**:
    ```sh
    dotnet run
+   ```
 
-5. **Run the Tests**:
+5. **Testleri Çalıştırın**:
    ```sh
    dotnet test
+   ```

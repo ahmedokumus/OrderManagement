@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Entities;
 using Moq;
 using System;
+using Application.Features.Companies.Constants;
 
 namespace Application.Tests.Features.Companies.Queries;
 
@@ -44,14 +45,15 @@ public class GetAllCompanyTests
                 Name = "Test 1",
                 Description = "Test 1",
                 CreatedDate = DateTime.UtcNow,
-                LastUpdatedDate = DateTime.UtcNow}
+                LastUpdatedDate = DateTime.UtcNow
+            }
         };
 
         _unitOfWorkMock.Setup(x => x.ReadRepository.GetAll()).Returns(companies.AsQueryable());
         _mapperMock.Setup(x => x.Map<List<GetAllCompanyResponse>>(It.IsAny<List<Company>>())).Returns(response);
 
-        _cacheServiceMock.Setup(x => x.GetAll<List<GetAllCompanyResponse>>(""));
-        _cacheServiceMock.Setup(x => x.Set("Test", response, TimeSpan.FromHours(1)));
+        _cacheServiceMock.Setup(x => x.GetAll<List<GetAllCompanyResponse>>(CompaniesCacheKeys.Test));
+        _cacheServiceMock.Setup(x => x.Set(CompaniesCacheKeys.Test, response, TimeSpan.FromHours(1)));
 
         var result = await _handler.Handle(new GetAllCompanyRequest(), CancellationToken.None);
 

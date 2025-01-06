@@ -36,8 +36,5 @@ public static class ServiceRegistration
         services.AddScoped<IProductCategoryUnitOfWork, ProductCategoryUnitOfWork>();
         services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
         services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
-
-
-        
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System.Linq.Expressions;
 
-namespace Application.Repositories
+namespace Application.Repositories;
+
+public interface IReadRepository<T> : IRepository<T> where T : class
 {
-    public interface IReadRepository<T> :IRepository<T> where T : class
-    {
-        IQueryable<T> GetAll();
+    IQueryable<T> GetAll();
 
-        IQueryable<T> GetWhere(Expression<Func<T, bool>> method);
+    IQueryable<T> GetWhere(Expression<Func<T, bool>> method);
 
-        Task<T> GetSingleAsync(Expression<Func<T, bool>> method);
+    Task<T> GetSingleAsync(Expression<Func<T, bool>> method);
 
-        Task<T> GetByIdAsync(Guid id); //convert guid
+    Task<T> GetByIdAsync(Guid id);
 
 
-    }
 }

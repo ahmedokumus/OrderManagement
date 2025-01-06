@@ -15,16 +15,16 @@ namespace Application.Features.Companies.Rules
             _companyUnitOfWork = companyUnitOfWork;
         }
 
-        public void BrandIdShouldExistWhenSelected(Company? company)
+        public void CompanyIdShouldExistWhenSelected(Company? company)
         {
             if (company == null)
                 throw new BusinessException(CompaniesMessages.CompanyNotExists);
         }
 
-        public async Task BrandIdShouldExistWhenSelected(Guid id)
+        public async Task CompanyIdShouldExistWhenSelected(Guid id)
         {
             Company company = await _companyUnitOfWork.ReadRepository.GetByIdAsync(id);
-            BrandIdShouldExistWhenSelected(company);
+            CompanyIdShouldExistWhenSelected(company);
         }
 
         public async Task CompanyNameCanNotBeDuplicatedWhenInserted(string name)

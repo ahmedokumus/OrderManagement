@@ -34,7 +34,7 @@ namespace Application.Features.Products.Commands.Create
 
 			await _unitOfWork.SaveAsync();
 
-			List<Product> productsInCache = _cacheService.GetAll<List<Product>>("AllProducts") ?? new List<Product>();
+			List<Product> productsInCache = _cacheService.GetAll<List<Product>>("AllProducts");
 			productsInCache.Add(product);
 
 			_cacheService.Set("AllProducts", productsInCache, TimeSpan.FromHours(3));

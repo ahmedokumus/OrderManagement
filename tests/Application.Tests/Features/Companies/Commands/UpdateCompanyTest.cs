@@ -1,5 +1,4 @@
-﻿//using Application.Excepetions;
-using Application.Excepetions;
+﻿using Application.Excepetions;
 using Application.Features.Companies.Commands.Update;
 using Application.Features.Companies.Constants;
 using Application.Features.Companies.Rules;
@@ -17,8 +16,8 @@ public class UpdateCompanyTest
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<ICompanyUnitOfWork> _unitOfWorkMock = new();
     private readonly Mock<ICompanyBusinessRules> _businessRulesMock = new();
-	private readonly Mock<ICacheService> _cacheServiceMock = new();
-	private readonly UpdateCompanyHandler _handler;
+    private readonly Mock<ICacheService> _cacheServiceMock = new();
+    private readonly UpdateCompanyHandler _handler;
     private readonly CompanyFakeData _fakeData = new();
 
     public UpdateCompanyTest()
@@ -36,12 +35,7 @@ public class UpdateCompanyTest
             Description = "UpdateTest"
         };
 
-        Company company = new()
-        {
-            Id = request.Id,
-            Name = "Test",
-            Description = "Test"
-        };
+        Company company = _fakeData.FakeData()[0];
 
         UpdateCompanyResponse response = new()
         {
@@ -53,10 +47,9 @@ public class UpdateCompanyTest
         _unitOfWorkMock.Setup(x => x.WriteRepository.Update(company)).Returns(Task.FromResult(true));
         _mapperMock.Setup(x => x.Map<UpdateCompanyResponse>(company)).Returns(response);
 
-		var companiesInCache = new List<Company> { company };
-		_cacheServiceMock.Setup(x => x.GetAll<List<Company>>("AllCompanies")).Returns(companiesInCache);
+        _cacheServiceMock.Setup(x => x.GetAll<List<Company>>(CompaniesCacheKeys.AllCompanies)).Returns(new List<Company> { company });
 
-		var result = await _handler.Handle(request, CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         Assert.Equal(result, response);
 

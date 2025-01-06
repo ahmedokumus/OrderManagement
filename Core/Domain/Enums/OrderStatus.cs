@@ -1,9 +1,8 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+
+public enum OrderStatus
 {
-    public enum OrderStatus
-    {
-        Pending,
-        Successfull,
-        Failed
-    }
+    Pending,
+    Successfull,
+    Failed
 }
