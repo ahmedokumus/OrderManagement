@@ -1,4 +1,6 @@
-﻿using Application.Repositories.CompanyRepository;
+﻿using Application.Features.Companies.Constants;
+using Application.Features.Companies.Rules;
+using Application.Repositories.CompanyRepository;
 using Application.Services;
 using AutoMapper;
 using Domain.Entities;
@@ -11,36 +13,30 @@ public class DeleteCompanyHandler : IRequestHandler<DeleteCompanyRequest, Delete
     
     private readonly IMapper _mapper;
     private readonly ICompanyUnitOfWork _unitOfWork;
+    private readonly ICompanyBusinessRules _businessRules;
     private readonly ICacheService _cacheService;
 
-	public DeleteCompanyHandler(IMapper mapper, ICompanyUnitOfWork unitOfWork, ICacheService cacheService)
+	public DeleteCompanyHandler(IMapper mapper, ICompanyUnitOfWork unitOfWork, ICacheService cacheService, ICompanyBusinessRules businessRules)
 	{
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
 		_cacheService = cacheService;
-	}
+        _businessRules = businessRules;
+    }
 
 	public async Task<DeleteCompanyResponse> Handle(DeleteCompanyRequest request, CancellationToken cancellationToken)
     {
-        Company company = await _unitOfWork.ReadRepository.GetByIdAsync(request.Id);
+        await _businessRules.CompanyIdShouldExistWhenSelected(request.Id);
 
+        Company mappedCompany = await _unitOfWork.ReadRepository.GetByIdAsync(request.Id);
         await _unitOfWork.WriteRepository.RemoveAsync(request.Id);
-
 		await _unitOfWork.SaveAsync();
 
-		List<Company> companiesInCache = _cacheService.GetAll<List<Company>>("AllCompanies") ?? new List<Company>();
-
-		// Silinen şirketi cache'den burada çıkarıyoruz
+		List<Company> companiesInCache = _cacheService.GetAll<List<Company>>(CompaniesCacheKeys.AllCompanies);
 		companiesInCache.RemoveAll(c => c.Id == request.Id);
+        _cacheService.Set(CompaniesCacheKeys.AllCompanies, companiesInCache, TimeSpan.FromMinutes(1));
 
-		// Güncellenmiş listeyi tekrar önbelleğe koyma işlemi
-		_cacheService.Set("AllCompanies", companiesInCache, TimeSpan.FromHours(3));
-
-
-
-
-		DeleteCompanyResponse response = _mapper.Map<DeleteCompanyResponse>(company);
-
+		DeleteCompanyResponse response = _mapper.Map<DeleteCompanyResponse>(mappedCompany);
         return response;
     }
 }

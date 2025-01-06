@@ -1,6 +1,6 @@
 using Application.Aspects.Autofac.Validation;
+using Application.Features.Companies.Constants;
 using Application.Features.Companies.Rules;
-using Application.Logging.Serilog.Logger;
 using Application.Repositories.CompanyRepository;
 using Application.Services;
 using AutoMapper;
@@ -30,24 +30,16 @@ public class CreateCompanyHandler : IRequestHandler<CreateCompanyRequest, Create
     {
         await _businessRules.CompanyNameCanNotBeDuplicatedWhenInserted(request.Name);
 
-        Company company = _mapper.Map<Company>(request);
-
-        await _unitOfWork.WriteRepository.AddAsync(company);
-
+        Company mappedCompany = _mapper.Map<Company>(request);
+        await _unitOfWork.WriteRepository.AddAsync(mappedCompany);
         await _unitOfWork.SaveAsync();
-        //await _mailService.SendMessageAsync("busekose01@icloud.com",
-        //    "örnek mail", "<strong>bu bir örnek maildir.</strong>");
 
+        List<Company> companiesInCache = _cacheService.GetAll<List<Company>>(CompaniesCacheKeys.AllCompanies);
+        companiesInCache.Add(mappedCompany);
+        _cacheService.Set(CompaniesCacheKeys.AllCompanies, companiesInCache, TimeSpan.FromMinutes(1));
+        _cacheService.Remove(CompaniesCacheKeys.AllCompanies);
 
-        List<Company> companiesInCache = _cacheService.GetAll<List<Company>>("AllCompanies") ?? new List<Company>();
-        companiesInCache.Add(company);
-
-        _cacheService.Set("AllCompanies", companiesInCache, TimeSpan.FromHours(3));
-
-        _cacheService.Remove("All Of Them");
-
-        CreateCompanyResponse response = _mapper.Map<CreateCompanyResponse>(company);
-
+        CreateCompanyResponse response = _mapper.Map<CreateCompanyResponse>(mappedCompany);
         return response;
     }
 }

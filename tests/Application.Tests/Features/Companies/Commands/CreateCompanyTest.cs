@@ -25,7 +25,7 @@ public class CreateCompanyTest
         _handler = new CreateCompanyHandler(_mapperMock.Object, _unitOfWorkMock.Object,  _businessRulesMock.Object, _cacheServiceMock.Object);
     }
 
-    [Fact]
+    [Fact]//Başarılı şirket ekleme işleminin test edilmesi.
     public async Task CreateCompanyHandler_GivenCompanyToCreate_ShouldReturnSuccessfulCompanyModel()
     {
         // Arrange - Düzenlemek
@@ -46,9 +46,9 @@ public class CreateCompanyTest
         _unitOfWorkMock.Setup(x => x.WriteRepository.AddAsync(It.IsAny<Company>())).Returns(Task.FromResult(true));
         _mapperMock.Setup(x => x.Map<CreateCompanyResponse>(It.IsAny<Company>())).Returns(response);
 
-		_cacheServiceMock.Setup(x => x.GetAll<List<Company>>("AllCompanies")).Returns(new List<Company>());
-		_cacheServiceMock.Setup(x => x.Set("AllCompanies", It.IsAny<List<Company>>(), TimeSpan.FromHours(3))).Verifiable();
-		_cacheServiceMock.Setup(x => x.Remove("All Of Them")).Verifiable();
+		_cacheServiceMock.Setup(x => x.GetAll<List<Company>>(CompaniesCacheKeys.Test)).Returns(new List<Company>());
+		_cacheServiceMock.Setup(x => x.Set(CompaniesCacheKeys.Test, It.IsAny<List<Company>>(), TimeSpan.FromMinutes(1))).Verifiable();
+		_cacheServiceMock.Setup(x => x.Remove(CompaniesCacheKeys.Test)).Verifiable();
 
 		// Act - Davranmak
 		var result = await _handler.Handle(request, CancellationToken.None);
@@ -63,7 +63,7 @@ public class CreateCompanyTest
 		
 	}
 
-    [Fact]
+    [Fact]//Aynı isimde şirketin hata vermesinin test edilmesi
     public async Task CreateCompanyHandler_GivenExistingCompanyName_ShouldThrowException()
     {
         CreateCompanyRequest request = new()

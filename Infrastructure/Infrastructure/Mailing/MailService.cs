@@ -28,12 +28,12 @@ namespace Infrastructure.Mailing
                 mail.To.Add(to);
             mail.Subject = subject;
             mail.Body = body;
-            mail.From = new(_configuration["Mail:Username"] ,"NG E-Ticaret", System.Text.Encoding.UTF8);
+            mail.From = new(_configuration["Mail:Username"]! ,"Sipariş YÖnetim", System.Text.Encoding.UTF8); 
             SmtpClient smtp = new();
-            smtp.Credentials = new NetworkCredential(_configuration["Mail:Username"], _configuration["Mail:Password"]);
+            smtp.Credentials = new NetworkCredential(_configuration["Mail:Username"], _configuration["Mail:Password"]); //appsettings.json dosyasından çekiyoruz
             smtp.Port = 587;
             smtp.EnableSsl = true;
-            smtp.Host = _configuration["Mail:Host"];
+            smtp.Host = _configuration["Mail:Host"]!; //appsettings.json dosyasından çekiyoruz
             await smtp.SendMailAsync(mail);
         }
     }

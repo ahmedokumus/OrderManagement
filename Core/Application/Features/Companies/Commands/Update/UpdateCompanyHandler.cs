@@ -1,4 +1,5 @@
-﻿using Application.Features.Companies.Rules;
+﻿using Application.Features.Companies.Constants;
+using Application.Features.Companies.Rules;
 using Application.Repositories.CompanyRepository;
 using Application.Services;
 using AutoMapper;
@@ -25,24 +26,19 @@ public class UpdateCompanyHandler : IRequestHandler<UpdateCompanyRequest, Update
 
 	public async Task<UpdateCompanyResponse> Handle(UpdateCompanyRequest request, CancellationToken cancellationToken)
     {
-		await _businessRules.CompanyNameCanNotBeDuplicatedWhenInserted(request.Name);
+        await _businessRules.CompanyIdShouldExistWhenSelected(request.Id);
+        await _businessRules.CompanyNameCanNotBeDuplicatedWhenInserted(request.Name);
 
-		var company = _mapper.Map<Company>(request);
-
-        await _unitOfWork.WriteRepository.Update(company);
-		
+        var mappedCompany = _mapper.Map<Company>(request);
+        await _unitOfWork.WriteRepository.Update(mappedCompany);
 		await _unitOfWork.SaveAsync();
 
-		
-		List<Company> companiesInCache = _cacheService.GetAll<List<Company>>("AllCompanies") ?? new List<Company>();
-
+		List<Company> companiesInCache = _cacheService.GetAll<List<Company>>(CompaniesCacheKeys.AllCompanies);
 		companiesInCache.RemoveAll(c => c.Id == request.Id);
+		companiesInCache.Add(mappedCompany);
+		_cacheService.Set(CompaniesCacheKeys.AllCompanies, companiesInCache, TimeSpan.FromMinutes(2));
 
-		companiesInCache.Add(company);
-
-		_cacheService.Set("AllCompanies", companiesInCache, TimeSpan.FromHours(3));
-
-		var  response = _mapper.Map<UpdateCompanyResponse>(company);
+		var  response = _mapper.Map<UpdateCompanyResponse>(mappedCompany);
         return response;
     }
 }

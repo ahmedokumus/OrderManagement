@@ -1,19 +1,16 @@
-﻿namespace Application.Repositories
+﻿namespace Application.Repositories;
+
+public interface IWriteRepository<T> : IRepository<T> where T : class
 {
-    public interface IWriteRepository<T> :IRepository<T>  where T : class
-    {
-        Task<bool> AddAsync(T model);
+    Task<bool> AddAsync(T model);
 
-        Task<bool> AddRangeAsync(List<T> datas);
+    Task<bool> AddRangeAsync(List<T> datas);
 
-        Task<bool> Update(T model);
+    Task<bool> Update(T model);
 
-        bool Remove(T model);
+    bool Remove(T model);
 
-        bool RemoveRange(List<T> datas);
+    bool RemoveRange(List<T> datas);
 
-        Task<bool> RemoveAsync(Guid id); //convert guid 
-
-        //Task<int> SaveAsync(T model);
-    }
+    Task<bool> RemoveAsync(Guid id);
 }
